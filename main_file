@@ -1,0 +1,124 @@
+var token = "1167xxxxxxx:AAExxxxxxxxW0ntvTrUxxxxxxxxxxxE";
+var telegramUrl = "https://api.telegram.org/bot" + token;
+var webAppUrl = "https://script.google.com/macros/s/AKfycbx2GMJvgejeMRJ4In1VUhY8eQpfkWZxxxxxxxx/exec";
+var ssId = "1O6udzEf0fEbz0Cp2x-i944g-MJxxxxxxxxxxxx";
+var textMsgUniv = "telegramUrl + \"/sendMessage?chat_id=\"+ id + \"&text=\" + name;"
+
+function getMe(){
+  var url = telegramUrl + "/getMe";
+  var response = UrlFetchApp.fetch(url);
+  Logger.log(response.getContentText());
+}
+
+function setWebhook(){
+  var url = telegramUrl + "/setWebhook?url=" + webAppUrl;
+  var response = UrlFetchApp.fetch(url);
+  Logger.log(response.getContentText());
+}
+
+function sendText(id,text){
+//  var url = telegramUrl + "/sendMessage?chat_id="+ id + "&text=" + text;
+  //var response = UrlFetchApp.fetch(url);
+//  Logger.log(response.getContentText());
+}
+
+//file_type = JSON.parse(e.postData.contents.message.)
+
+function sendR(id, name){
+  if(keys.includes("video")){
+  file_id = data.message.video.file_id;
+  var main_file = telegramUrl + "/sendvideo?chat_id="+ id + "&video=" + file_id;
+//  var your_name = textMsgUniv + name;
+//  var file_name = textMsgUniv + name;
+//  var your_name = textMsgUniv + name;
+//  var your_name = textMsgUniv + name;
+    
+  var response = UrlFetchApp.fetch(main_file);
+//  var response = UrlFetchApp.fetch(your_name);
+//  var response = UrlFetchApp.fetch(url2);
+//  var response = UrlFetchApp.fetch(url2);
+//  var response = UrlFetchApp.fetch(url2);
+//  var response = JSON.stringify(data, null, 4);
+  //Logger.log(response.getContentText());
+    
+}
+  else if(keys.includes("photo")){
+//  file_size = data.message.photo[(data.message.photo.length)-1].file_size;
+  file_id = data.message.photo[(data.message.photo.length)-1].file_id;
+  var url = telegramUrl + "/sendphoto?chat_id="+ id + "&photo=" + file_id;
+  var response = UrlFetchApp.fetch(url);
+  Logger.log(response.getContentText());
+}
+  else if(keys.includes("audio")){
+  file_id = data.message.audio.file_id;
+  var url = telegramUrl + "/sendaudio?chat_id="+ id + "&audio=" + file_id;
+  var response = UrlFetchApp.fetch(url);
+  Logger.log(response.getContentText());
+}
+ else if(keys.includes("document")){
+  file_id = data.message.document.file_id;
+   
+  var file_name = data.message.document.file_name;
+   var url_fl_nm = telegramUrl + "/sendMessage?chat_id="+ id + "&text=" + file_name;
+  var url = telegramUrl + "/senddocument?chat_id="+ id + "&document=" + file_id;
+  var response = UrlFetchApp.fetch(url);
+  var response = UrlFetchApp.fetch(url_fl_nm);
+  Logger.log(response.getContentText());
+}
+  else if(keys.includes("voice")){
+  file_id = data.message.voice.file_id;
+  var url = telegramUrl + "/sendvoice?chat_id="+ id + "&voice=" + file_id;
+  var response = UrlFetchApp.fetch(url);
+  Logger.log(response.getContentText());
+}
+  
+else if(keys.includes("text")){
+  var text = data.message.text;
+  var url = telegramUrl + "/sendmessage?chat_id="+ id + "&text=" + text;
+  var response = UrlFetchApp.fetch(url);
+  Logger.log(response.getContentText());
+}
+}
+
+function doGet(e){
+  return HtmlService.createHtmlOutput("Hello there");
+}
+
+function doPost(e){
+  data = JSON.parse(e.postData.contents);
+  var text = data.message.text;
+  var id = data.message.chat.id;
+  name = data.message.chat.first_name +" "+ data.message.chat.last_name;
+  var answer = "Hi " + name + ", thank you for your comment " + text;
+  keys = Object.keys(data.message);
+  
+  SpreadsheetApp.openById(ssId).getSheets()[0].appendRow([new Date(),id,name,text]);
+  //GmailApp.sendEmail(Session.getEffectiveUser().getEmail(),"message sent to bot.",JSON.stringify(e, null, 4));
+  sendText(id,sendR(id,name));
+}
+
+
+
+/*
+{
+    "update_id": 34563xxx,
+    "message": {
+        "message_id": 44,
+        "from": {
+            "id": 1133008xxxx,
+            "is_bot": false,
+            "first_name": "Ab",
+            "username": "abhi47xx",
+            "language_code": "en"
+        },
+        "chat": {
+            "id": 11330xxxx,
+            "first_name": "Ab",
+            "username": "avhuxxxx",
+            "type": "private"
+        },
+        "date": 1599312554,
+        "text": "hii"
+    }
+}
+*/
